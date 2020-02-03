@@ -1,0 +1,11 @@
+{% extends 'child_base.html' %}
+
+{% block title %}{{profile.name}} {{profile.surName}} | Дневник{% endblock %}
+{% block content %}
+
+<div class="container">
+	<strong>Профиль</strong>
+	<h6>{{profile.name}} {{profile.surName}} {{profile.lastName}}</h6>
+	<h3>{{profile.status}}</h3>
+</div>
+{% endblock %}

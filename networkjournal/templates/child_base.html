@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>{% block title %}Дневник{% endblock %} | Дневник</title>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lobster" />
+	{% load static %}
+	<link rel="shortcut icon" href="https://lh3.googleusercontent.com/JPm2p8jOgxwShKIs02V3GBJsmQa0HwLpt1IIwzUxfrvjOgvm6UPfVcs52m64iX-lZzVTu47B6amWofzWPz2kznMXNbzIH7PhlnY6afdGZSgnHg-dTD8fuRvdUuTuVCVbmkYs_kYk_5_qtSRNki_SEAz9uD8N9Ngk2Jw7KMlxcTL5o3oSRV1cBBCOskoGtti1owcPFvsWRsQixTWqjohOXZ9j6RldsXgXQojDvZ4f87JSGNv6sb8K6KyxVqSgYYXiLEHMxx6i1p_M1lhf79IHST9jnWdPBnH8QRFQuyzdheAbA90uliJF614ybwYKmR3ku2aflAz043Z3x4E1O0hRW1Pe6-Zn4uvqp3SSfRIm8se3U2EvhYBKQ_lhi2O-2aW--TeeGqLT-GxNP4mUAqc3PG1nGyc6dVbLT8tPH0b2eeSiAgdsp-JSiaHb4rkj_zmAdyqnZsxiQn2ZKEVKHimS0AYNPWrYJucJUspYNWmpR0qcLSomappWEo1tbjXClu5XFLA_Ekf50Hd5bhMcFDg1dv7YV1pMgbzE1b5Uc8e9V_uPqppmeDhku8FDFylGhNrltrN9K5jP8UeT9UjWTvnUcmIOr-APDr3giy1yuhqmSENm9sMYa2RG7i1XOSO7xBphldVa8exbDUeSWL89sWCgaELRExeytDWTy2GqgVqHswN7QJ11xk2vau4LxeQcSW0=w200-h190-p-k-nu-ft">
+</head>
+	<body>
+	 </header>
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+			 <ul class="navbar-nav mr-auto">
+					<a class="navbar-brand" style="color:#83ACEA; font-family: 'Lobster', arial;" href="/">Электронный дневник</a>
+					{% block login %}
+					<li class="nav-item {% if '/' == request.path %} active {% endif %}">
+        		<a class="nav-link" href="/">Главная <span class="sr-only">(current)</span></a>
+      		</li>
+					<li class="nav-item {% if '/diary/' == request.path %} active {% endif %}">
+        		<a class="nav-link" href="/diary/">Дневник <span class="sr-only">(current)</span></a>
+      		</li>
+					<li class="nav-item {% if '/marks/' == request.path %} active {% endif %}">
+        		<a class="nav-link" href="/marks/">Отметки и статистика <span class="sr-only">(current)</span></a>
+      		</li>
+					<li class="nav-item {% if '/notifications/' == request.path %} active {% endif %}">
+        		<a class="nav-link" href="/notifications/">Уведомления <span class="sr-only">(current)</span></a>
+      		</li>
+					<li class="nav-item {% if '/timetable/' == request.path %} active {% endif %}">
+        		<a class="nav-link" href="/timetable/">Расписание <span class="sr-only">(current)</span></a>
+      		</li>
+					<li class="nav-item {% if '/profile/' == request.path %} active {% endif %}">
+        		<a class="nav-link" href="/profile/">Профиль <span class="sr-only">(current)</span></a>
+      		</li>
+					{% endblock %}
+			</ul>
+			<strong class="nav-link active ml-5 text-right" style="color:white">Пользователь: {{username}}</strong>
+			<a class="btn btn-danger ml-1" href="/logout/">Выйти</a>
+		</nav>
+		</header>
+		<br />
+		<br />
+		<br />
+		{% block content %}{% endblock %}
+		<footer class="container">
+			<p class="float-right"><a href="#">Наверх</a></p>
+			<p>&copy; 2019-2020 . Электронный дневник &middot; <a href="#">Политика конфиденциальности</a> &middot; <a href="#">Условия использования</a></p>
+		</footer>
+</body>
+</html>

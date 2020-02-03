@@ -1,0 +1,27 @@
+{% extends 'child_base.html' %}
+
+{% block title %}Заметки{% endblock %}
+{% block content %}
+
+{% if tips_list %}
+<h4>Заметки</h4>
+<hr>
+<div class="container">
+	{% for е in tips_list %}
+	<h5>{{e.text}}</h5>
+	<h6><em>{{e.text}}</em></h6>
+	<br>
+	{% endfor %}
+</div>
+{% else %}
+<h4>Вы ещё не добавляли заметок.</h4>
+{% endif %}
+
+<div class="container">
+	<form action="{% url 'home:add_tip' {{request.user}} %}" method="POST">
+		{% csrf_token %}
+		<input class="form-control" name="text" required placeholder="Текст заметки"></input><button class="btn btn-info" type="submit" name="button">Добавить заметку</button>
+		<hr>
+	</form>
+</div>
+{% endblock %}

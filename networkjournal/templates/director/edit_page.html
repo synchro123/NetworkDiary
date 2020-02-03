@@ -1,0 +1,78 @@
+{% extends 'director_base.html' %}
+
+{% block title %}Новости{% endblock %}
+{% block content %}
+<div class="container">
+  <h4>Редактирование новостей</h4>
+  {% if success %}
+  <p style='color:green'>Новость успешно добавлена!</p>
+  {% endif %}
+  {% if update %}
+    <form class="" id="update_form" method="post">
+      {% csrf_token %}
+      <input class="form-control" value="req_title" name="title" required placeholder="Заголовок"></input>
+      <textarea class="form-control" value="req_text" name="text" required placeholder="Текст новости"></textarea>
+    </form>
+    <button form="update_form" type="submit" class="btn btn-success">Применить изменения</button>
+  {% else %}
+    <br>
+      <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+      Добавить новость
+    </button>
+    <br>
+    <br>
+  {% endif %}
+  {% if list_articles %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Код</th>
+        <th scope="col">Название</th>
+        <th scope="col">Дата написания</th>
+        <th scope="col">Редактирование</th>
+        <th scope="col">Удаление</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in list_articles %}
+        <tr>
+          <th>{{a.id}}</th>
+          <td>{{a.title}}</td>
+          <td>{{a.date}}</td>
+          <td><a href="{% url 'home:update_article' a.id %}">Редактировать</a></td>
+          <td><a href="{% url 'home:delete_article' a.id %}">Удалить</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  {% endif %}
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Добавление новости</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="" id="add_form" method="post">
+            {% csrf_token %}
+        		<input class="form-control" name="title" required placeholder="Заголовок"></input>
+        		<textarea class="form-control" name="text" required placeholder="Текст новости"></textarea>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+          <button form="add_form" type="submit" class="btn btn-primary">Добавить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

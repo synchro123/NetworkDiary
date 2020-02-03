@@ -1,0 +1,14 @@
+{% extends 'director_base.html' %}
+
+{% block title %}Добавление новости{% endblock %}
+{% block content %}
+
+ <div class="container">
+	<form action="{% url 'home:leave_article' article.id %}" method="post">
+    {% csrf_token %}
+		<input class="form-control" name="title" required placeholder="Заголовок"></input>
+		<textarea class="form-control" name="text" required placeholder="Текст новости"></textarea>
+    <button class="btn btn-info" type="submit" name="button">Опубликовать новость</button>
+  </form>
+ </div>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'director_base.html' %}
+{% block title %}Настройки школы{% endblock %}
+{% block content %}
+<div class="container">
+  {% if addclass %}
+    <form class="" id="add_cl_form" method="post">
+      {% csrf_token %}
+      <input name="cl_num" type="number" class="form-control" placeholder="Цифра класса" min="1" max="11" maxlength="1" required autofocus>
+      <input name="cl_letter" class="form-control" placeholder="Буква класса" maxlength="1" required autofocus>
+    </form>
+    <a href="/school_setup/" class="btn btn-secondary">Отмена</a>
+    <button form="add_cl_form" type="submit" class="btn btn-primary">Добавить класс</button>
+  {% else %}
+    {% if editclass %}
+      <form class="" id="ed_cl_form" method="post">
+        {% csrf_token %}
+        <input name="cl_num" type="number" class="form-control" value="{{req_num}}" placeholder="Цифра класса" min="1" max="11" maxlength="1" required autofocus>
+        <input name="cl_letter" class="form-control" placeholder="Буква класса" value="{{req_char}}" maxlength="1" required autofocus>
+      </form>
+      <button form="ed_cl_form" type="submit" class="btn btn-success">Применить изменения</button>
+      <hr>
+      {% if classmates %}
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Ф.И.О</th>
+            <th scope="col">Редактирование</th>
+            <th scope="col">Удаление</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in classmates %}
+          <tr>
+            <th>{{c}}</th>
+            <td>{{c.}}</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">Добавить ученика в этот класс</button>
+      <hr>
+      <a href="/school_setup/" class="btn btn-outline-success">Назад</a>
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Добавление ученика</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              {% csrf_token %}
+              <form class="" id="ed_childs_form" method="post">
+                <input class="form-control" type="text" name="name"  required placeholder="Имя">
+                <input class="form-control" type="text" name="surname"  required placeholder="Фамилия">
+                <input class="form-control" type="text" name="fathername"  required placeholder="Отчество">
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+              <button form="ed_childs_form" type="submit" class="btn btn-success">Создать ученика</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      {% if school %}
+      <div class="container text-center">
+        <h1 style="color:green"><strong>{{ school.name }}</strong></h1>
+        {% if classes %}
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Класс</th>
+              <th scope="col">Редактирование</th>
+              <th scope="col">Удаление</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in classes %}
+              <tr>
+                <td>{{c}}</td>
+                <td><a href="{% url 'home:redact_class' c.id %}">Редактировать</a></td>
+                <td><a href="{% url 'home:delete_class' c.id %}">Удалить</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <h2>Вы ещё не добавили ни одного класса.</h2>
+        {% endif %}
+        <a class="btn btn-outline-primary" href="/school_setup/add_class/">Добавить класс</a>
+        <br>
+        <hr>
+        <p>Учителя</p>
+      </div>
+      {% else %}
+        <h2>Сначала добавьте школу.</h2>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">Добавить школу</button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Добавление школы</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form class="" id="add_sc_form" method="post">
+                  {% csrf_token %}
+                  <!--{{ form }}-->
+                  <input name="sc_name" class="form-control" placeholder="Название учебного заведения" maxlength="50" required autofocus>
+                  <input class="form-control" type="url" placeholder="Сайт учебного заведения" name="sc_site">
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                <button form="add_sc_form" type="submit" class="btn btn-primary">Добавить школу</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

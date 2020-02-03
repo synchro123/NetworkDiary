@@ -1,0 +1,27 @@
+{% extends 'director_base.html' %}
+
+{% block title %}Главная{% endblock %}
+{% block content %}
+<div class="container">
+ 	<hr>
+ 	<h3><strong>Новости</strong></h3>
+ 	<br>
+   <a class="btn btn-primary" href="/news/edit/">Редактирование новостей</a>
+   <hr>
+</div>
+ {% if article %}
+ <div class="container">
+
+	{% for a in article %}
+  <ul class="list-group mt-4">
+  <li class="list-group-item"><strong>{{a.date}}</strong> <span>{{a.title}}</span> <span class="float-right mr-3"><a href="{% url 'home:det' a.id %}">Перейти к новости</a></span></li>
+  </ul>
+	{% endfor %}
+	</div>
+ {% else %}
+ <div class="container">
+   <br>
+   <h4>Добавьте первую новость</h4>
+ </div>
+ {% endif %}
+{% endblock %}
