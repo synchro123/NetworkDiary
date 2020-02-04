@@ -10,8 +10,8 @@
   {% if update %}
     <form class="" id="update_form" method="post">
       {% csrf_token %}
-      <input class="form-control" value="req_title" name="title" required placeholder="Заголовок"></input>
-      <textarea class="form-control" value="req_text" name="text" required placeholder="Текст новости"></textarea>
+      <input class="form-control" value="{{req_title}}" name="title" required placeholder="Заголовок"></input>
+      <textarea class="form-control" name="text" required placeholder="Текст новости">{{req_text}}</textarea>
     </form>
     <button form="update_form" type="submit" class="btn btn-success">Применить изменения</button>
   {% else %}

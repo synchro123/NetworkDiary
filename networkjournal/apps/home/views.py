@@ -6,9 +6,9 @@ from django.utils import timezone
 
 from .models import Article, School, Class
 from django.contrib.auth.views import LoginView, LogoutView
-from .forms import AuthUserForm, ArticleForm, SchoolForm, ClassForm
+from .forms import AuthUserForm, ArticleForm
 
-from .user_fields import get_user_status, get_user_surname, get_user_name, get_user_fathername, set_user_school, get_user_school
+from .user_fields import get_user_status, get_user_surname, get_user_name, get_user_fathername, set_user_school, get_user_school, get_user_class
 
 from django.contrib.auth.models import User
 
@@ -324,12 +324,51 @@ def redact_school_class(request, id):
         a.letter = cl_char
         a.save()
 
+    users_list = User.objects.all()
+    users_inclass_info = []
+    for u in users_list:
+        if(int(get_user_class(u)) == id):
+            fio = get_user_name(u)[0]+'. '+get_user_fathername(u)[0]+'. '+get_user_surname(u)
+            users_inclass_info.append([u, fio])
+
     username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
     template = 'director/school_setup.html'
     context = {
         'username': username,
         'editclass': True,
         'req_num': a.num,
-        'req_char': a.letter
+        'req_char': a.letter,
+        'classid': id,
+        'classmates': users_inclass_info,
     }
     return render(request, template, context)
+
+def add_classmate_to_class(request, id):
+    a = Class.objects.get(pk=id)
+    if request.method == 'POST':
+        name = request.POST['name']
+        surname = request.POST['surname']
+        fathername = request.POST['fathername']
+
+        usrname = request.POST['username']
+        pwd = request.POST['password']
+
+        newUser = User.objects.create_user(usrname, '', pwd)
+        newUser.last_name = 'child___' + name + '___' + surname + '___' + fathername + '___schoolid=' + get_user_school(request.user) + '___classid=' + str(id)
+        newUser.save()
+        return HttpResponseRedirect(reverse('home:school_setup'))
+    username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
+    template = 'director/school_setup.html'
+    context = {
+        'username': username,
+        'editclass': True,
+        'addclassmate': True,
+    }
+    return render(request, template, context)
+
+def delete_child(request, id):
+    a = User.objects.get(pk=id)
+    #clid = get_user_class(a)
+    a.delete()
+    #return  HttpResponseRedirect('/school_setup/redact_class/'+str(clid))
+    return HttpResponseRedirect(reverse('home:school_setup'))
