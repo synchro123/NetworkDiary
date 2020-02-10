@@ -1,0 +1,37 @@
+{% extends 'teacher_base.html' %}
+
+{% block title %}{{article.title}} | Новости{% endblock %}
+{% block content %}
+
+<div class="container">
+	<h2>{{article.title}}</h2>
+
+	<p>{{article.text}}</p>
+
+	<em>Опубликовано {{article.date}}</em>
+	<br>
+	<br>
+	<hr>
+	<form action="{% url 'home:leave_comment' article.id %}" method="POST">
+
+		{% csrf_token %}
+		<input class="form-control" name="text" required placeholder="Текст комментария"></input>
+		<button class="btn btn-info" type="submit" name="button">Оставить комментарий</button>
+		<hr>
+	</form>
+	{% if latest_comm_list %}
+	<h4>Комментарии пользователей</h4>
+	<hr>
+	<div class="container">
+		{% for c in latest_comm_list %}
+		<h4><strong>{{c.author}}</strong></h4>
+		<h6>{{c.text}}</h6>
+		<br>
+		{% endfor %}
+	</div>
+
+	{% else %}
+	<h5>Никто ещё не прокомментировал эту новость.</h5>
+	{% endif %}
+</div>
+{% endblock %}

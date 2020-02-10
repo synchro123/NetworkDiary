@@ -12,29 +12,23 @@
     <title>Регистрация учителя | Дневник</title>
   </head>
   <body class="text-center">
-    {% csrf_token %}
     <div class="container">
-    <form action="{% url 'home:create_director_user' %}" method="POST">
+    <form id="_form" method="POST">
       {% csrf_token %}
       <img class="mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Регистрация нового учителя</h1>
       <br>
-      <h6>Регистрация учителя. Если вы хотите зарегитрировать директора, перейдите по <a href="/register/">этой ссылке</a>.</h6>
+      <input name="username" class="form-control" placeholder="Имя пользователя" required autofocus>
       <br>
-      <input name="userName" class="form-control" placeholder="Имя пользователя" required autofocus>
+      <input name="name" class="form-control" placeholder="Имя" required autofocus>
+      <input name="surname" class="form-control" placeholder="Фамилия" required autofocus>
+      <input name="fathername" class="form-control" placeholder="Отчество" required autofocus>
       <br>
-      <input name="userRealName" class="form-control" placeholder="Имя" required autofocus>
-      <input name="userLastName" class="form-control" placeholder="Фамилия" required autofocus>
-      <input name="userFatherName" class="form-control" placeholder="Отчество" required autofocus>
-      <br>
-      <input type="email" name="inputEmail" class="form-control" placeholder="Адрес электронной почты" required autofocus>
-      <br>
-      <input type="password" name="inputPassword" class="form-control" placeholder="Пароль" required>
-      <input type="password" name="inputPasswordReq" class="form-control" placeholder="Повторите пароль" required>
+      <input type="password" name="password" class="form-control" placeholder="Пароль" required>
       <br>
       <hr>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Зарегистрировать учителя</button>
-      <p class="mt-5 mb-3 text-muted">&copy; 2019-2020 <a href="/login/">Назад</a></p>
+      <button class="btn btn-lg btn-primary btn-block" form="_form" type="submit">Зарегистрировать учителя</button>
+      <p class="mt-5 mb-3 text-muted">&copy; 2019-2020 <a href="/login/">Авторизация</a></p>
     </form>
   </div>
     <!-- Optional JavaScript -->

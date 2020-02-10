@@ -1,0 +1,12 @@
+{% extends 'director_base.html' %}
+{% block title %}Настройки школы{% endblock %}
+{% block content %}
+<div class="container text-center">
+  <form class="" id="ed_form" method="post">
+    {% csrf_token %}
+    <input class="form-control" type="text" name="name" value="{{req_name}}"   required placeholder="Название">
+    <input class="form-control" type="url" name="site" value="{{req_site}}" placeholder="Сайт">
+  </form>
+  <button form="ed_form" type="submit" class="btn btn-success">Применить</button>
+</div>
+{% endblock %}

@@ -35,7 +35,7 @@
           <table class="table table-hover">
             <thead>
               <tr>
-                <th scope="col">Login</th>
+                <th scope="col">Логин</th>
                 <th scope="col">Ф.И.О</th>
                 <th scope="col">Редактирование</th>
                 <th scope="col">Удаление</th>
@@ -46,7 +46,7 @@
                 <tr>
                   <th>{{usr}}</th>
                   <td>{{fio}}</td>
-                  <td><a href="/redact_child/{{usr.id}}">Редактировать</a></td>
+                  <td><a href="{% url 'home:redact_classmate' usr.id %}">Редактировать</a></td>
                   <td><a href="{% url 'home:delete_classmate' usr.id %}">Удалить</a></td>
                 </tr>
               {% endfor %}
@@ -60,7 +60,9 @@
     {% else %}
       {% if school %}
       <div class="container text-center">
-        <h1 style="color:green"><strong>{{ school.name }}</strong></h1>
+        <span><strong style="color:green; font-size: 22pt;">{{ school.name }}</strong><a href="{% url 'home:edit_school' %}" class="btn btn-light btn-sm">✏</a></span>
+        <br>
+        <br>
         {% if classes %}
         <table class="table table-hover">
           <thead>
@@ -86,7 +88,30 @@
         <a class="btn btn-outline-primary" href="/school_setup/add_class/">Добавить класс</a>
         <br>
         <hr>
-        <p>Учителя</p>
+        <h3>Учителя</h3>
+        {% if teachers %}
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Логин</th>
+                <th scope="col">Ф.И.О</th>
+                <th scope="col">Редактирование</th>
+                <th scope="col">Удаление</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for usr, fio in teachers %}
+                <tr>
+                  <th>{{usr}}</th>
+                  <td>{{fio}}</td>
+                  <td><a href="{% url 'home:edit_teacher' usr.id %}">Редактировать</a></td>
+                  <td><a href="{% url 'home:delete_teacher' usr.id %}">Удалить</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+        <a class="btn btn-outline-primary" href="/school_setup/add_teacher/">Добавить учителя</a>
       </div>
       {% else %}
         <h2>Сначала добавьте школу.</h2>

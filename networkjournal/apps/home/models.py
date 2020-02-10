@@ -60,3 +60,15 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'комментарий'
         verbose_name_plural = 'комментарии'
+
+class SchoolSubject(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+
+    subj_name = models.CharField('Название предмета', max_length=100)
+
+    def __str__(self):
+        return self.subj_name
+
+    class Meta:
+        verbose_name = 'школьный предмет'
+        verbose_name_plural = 'школьные предметы'

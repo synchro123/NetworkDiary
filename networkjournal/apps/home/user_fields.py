@@ -42,3 +42,10 @@ def get_user_class(user):
         return prefs[5].split("=")[1]
     except:
         return 0
+
+def get_user_subject(user):
+    if get_user_status(user) != 'teacher': return 0
+    try:
+        return user.name.split(', ')
+    except:
+        return 0

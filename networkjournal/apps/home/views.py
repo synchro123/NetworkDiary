@@ -8,7 +8,7 @@ from .models import Article, School, Class
 from django.contrib.auth.views import LoginView, LogoutView
 from .forms import AuthUserForm, ArticleForm
 
-from .user_fields import get_user_status, get_user_surname, get_user_name, get_user_fathername, set_user_school, get_user_school, get_user_class
+from .user_fields import get_user_status, get_user_surname, get_user_name, get_user_fathername, set_user_school, get_user_school, get_user_class, get_user_subject
 
 from django.contrib.auth.models import User
 
@@ -26,6 +26,8 @@ def index(request):
         username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
         if get_user_status(request.user) == 'director':
             return render(request, 'director/list.html', {'article': a, 'username': username})
+        elif get_user_status(request.user) == 'teacher':
+            return render(request, 'teacher/list.html', {'article': a, 'username': username})
         else:
             return render(request, 'child/list.html', {'article': a, 'username': username})
 
@@ -61,7 +63,7 @@ def notifi(request):
         if get_user_status(request.user) == 'director':
             return render(request, 'director/notifi.html', {'username': username})
         else:
-            return render(request, 'home/notifi.html', {'username': username})
+            return render(request, 'child/notifi.html', {'username': username})
 
 
 def timetable(request):
@@ -86,6 +88,9 @@ def det(request, article):
 
         if get_user_status(request.user) == 'director':
             return render(request, 'director/det.html',
+                          {'article': a, 'latest_comm_list': latest_comm_list, 'username': username})
+        elif get_user_status(request.user) == 'teacher':
+            return render(request, 'teacher/det.html',
                           {'article': a, 'latest_comm_list': latest_comm_list, 'username': username})
         else:
             return render(request, 'child/det.html',
@@ -186,25 +191,6 @@ def delete_article_page(request, id):
     a.delete()
     return HttpResponseRedirect(reverse('home:edit_article'))
 
-
-def create_teacher(request):
-    userName = request.POST['userName']
-
-    userRealName = request.POST['userRealName']
-    userLastName = request.POST['userLastName']
-    userFatherName = request.POST['userFatherName']
-
-    userEmail = request.POST['inputEmail']
-
-    userPassword = request.POST['inputPassword']
-    userPasswordReq = request.POST['inputPasswordReq']
-    if userPassword == userPasswordReq:
-        newUser = User.objects.create_user(userName, userEmail, userPassword)
-        newUser.last_name = 'teacher___' + userRealName + '___' + userLastName + '___' + userFatherName + '___schoolid=0'
-        newUser.save()
-        return HttpResponseRedirect(reverse('home:login_page'))
-
-
 class SiteLoginView(LoginView):
     template_name = 'user_login.html'
     form_class = AuthUserForm
@@ -226,18 +212,6 @@ def diary(request):
         return HttpResponseRedirect(reverse('home:index'))
 
 
-def add_article_page(request):
-    if get_user_status(request.user) == 'director':
-        try:
-            sc = School.objects.get(director=request.user)
-        except:
-            return HttpResponseRedirect(reverse('home:school_setup'))
-        username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
-        return render(request, 'child/add_article.html', {'username': username})
-    else:
-        return HttpResponseRedirect(reverse('home:index'))
-
-
 def school_setup(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('home:login_page'))
@@ -247,12 +221,19 @@ def school_setup(request):
         except:
             return HttpResponseRedirect(reverse('home:create_school'))
         classes = a.class_set.order_by('id')
+        users_list = User.objects.all()
+        users_teachers_info = []
+        for u in users_list:
+            if (get_user_status(u) == 'teacher' and get_user_school(u) == str(a.id)):
+                fio = get_user_name(u)[0] + '. ' + get_user_fathername(u)[0] + '. ' + get_user_surname(u)
+                users_teachers_info.append([u, fio])
         username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
         template = 'director/school_setup.html'
         context = {
             'username': username,
             'school': a,
-            'classes': classes
+            'classes': classes,
+            'teachers': users_teachers_info,
         }
         return render(request, template, context)
     else:
@@ -283,6 +264,21 @@ def add_school(request):
     else:
         return HttpResponseRedirect(reverse('home:index'))
 
+def edit_school(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('home:login_page'))
+    if get_user_status(request.user) == 'director':
+        sc = School.objects.get(pk=get_user_school(request.user))
+        username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
+        template = 'director/edit_school_main.html'
+        context = {
+            'username': username,
+            'req_name': sc.name,
+            'req_site': sc.site
+        }
+        return render(request, template, context)
+    else:
+        return HttpResponseRedirect(reverse('home:index'))
 
 def add_school_class(request):
     if not request.user.is_authenticated:
@@ -315,7 +311,7 @@ def delete_school_class(request, id):
     return HttpResponseRedirect(reverse('home:school_setup'))
 
 
-def redact_school_class(request, id):
+def edit_school_class(request, id):
     a = Class.objects.get(pk=id)
     if request.method == 'POST':
         cl_num = request.POST['cl_num']
@@ -356,7 +352,7 @@ def add_classmate_to_class(request, id):
         newUser = User.objects.create_user(usrname, '', pwd)
         newUser.last_name = 'child___' + name + '___' + surname + '___' + fathername + '___schoolid=' + get_user_school(request.user) + '___classid=' + str(id)
         newUser.save()
-        return HttpResponseRedirect(reverse('home:school_setup'))
+        return HttpResponseRedirect('/school_setup/redact_class/'+str(id))
     username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
     template = 'director/school_setup.html'
     context = {
@@ -368,7 +364,73 @@ def add_classmate_to_class(request, id):
 
 def delete_child(request, id):
     a = User.objects.get(pk=id)
-    #clid = get_user_class(a)
+    clid = get_user_class(a)
     a.delete()
-    #return  HttpResponseRedirect('/school_setup/redact_class/'+str(clid))
-    return HttpResponseRedirect(reverse('home:school_setup'))
+    return  HttpResponseRedirect('/school_setup/redact_class/'+str(clid))
+
+def edit_child(request, id):
+    a = User.objects.get(pk=id)
+    if request.method == 'POST':
+        name = request.POST['name']
+        surname = request.POST['surname']
+        fathername = request.POST['fathername']
+
+        a.last_name = 'child___' + name + '___' + surname + '___' + fathername + '___schoolid=' + get_user_school(a) + '___classid=' + str(get_user_class(a))
+        a.save()
+        return HttpResponseRedirect('/school_setup/edit_class/'+str(get_user_class(a)))
+
+    template = "director/edit_child.html"
+    username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
+    context = {
+        'username': username,
+        'mname': get_user_name(a),
+        'sname': get_user_surname(a),
+        'fname': get_user_fathername(a),
+    }
+    return render(request, template, context)
+
+def add_teacher(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        surname = request.POST['surname']
+        fathername = request.POST['fathername']
+
+        usrname = request.POST['username']
+        pwd = request.POST['password']
+
+        newUser = User.objects.create_user(usrname, '', pwd)
+        newUser.last_name = 'teacher___' + name + '___' + surname + '___' + fathername + '___schoolid=' + get_user_school(request.user)
+        newUser.save()
+        return HttpResponseRedirect('/school_setup/')
+    template = 'register/teacher_register.html'
+    context = {
+
+    }
+    return render(request, template, context)
+
+def delete_teacher(request, id):
+    a = User.objects.get(pk=id)
+    a.delete()
+    return HttpResponseRedirect('/school_setup/')
+
+def edit_teacher(request, id):
+    a = User.objects.get(pk=id)
+    if request.method == 'POST':
+        name = request.POST['name']
+        surname = request.POST['surname']
+        fathername = request.POST['fathername']
+
+        a.last_name = 'teacher___' + name + '___' + surname + '___' + fathername + '___schoolid=' + get_user_school(a)
+        a.save()
+        a_class = get_user_class(a)
+        return HttpResponseRedirect('/school_setup/')
+
+    template = "director/edit_teacher.html"
+    username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
+    context = {
+        'username': username,
+        'mname': get_user_name(a),
+        'sname': get_user_surname(a),
+        'fname': get_user_fathername(a),
+    }
+    return render(request, template, context)

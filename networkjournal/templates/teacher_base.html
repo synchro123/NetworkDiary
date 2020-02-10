@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>{% block title %}Дневник{% endblock %} | Дневник</title>
+	<title>{% block title %}Главная{% endblock %} | Журнал</title>
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -16,29 +16,23 @@
 	 </header>
 		<nav class="navbar navbar-expand-md navbar-light fixed-top" style="background-color:#f5f5f5;">
 			 <ul class="navbar-nav mr-auto">
-					<a class="navbar-brand" style="color:#0066E7; font-family: 'Arial', arial;" href="/">Электронный дневник</a>
+					<a class="navbar-brand" style="color:#0066E7; font-family: 'Arial', arial;" href="/">Электронный журнал</a>
 					{% block login %}
 					<li class="nav-item {% if '/' == request.path %} active {% endif %}">
         		<a class="nav-link" href="/">Главная <span class="sr-only">(current)</span></a>
       		</li>
-					<li class="nav-item {% if '/diary/' == request.path %} active {% endif %}">
-        		<a class="nav-link" href="/diary/">Дневник <span class="sr-only">(current)</span></a>
-      		</li>
-					<li class="nav-item {% if '/marks/' == request.path %} active {% endif %}">
-        		<a class="nav-link" href="/marks/">Отметки и статистика <span class="sr-only">(current)</span></a>
-      		</li>
 					<li class="nav-item {% if '/notifications/' == request.path %} active {% endif %}">
-        		<a class="nav-link" href="/notifications/">Уведомления <span class="sr-only">(current)</span></a>
+        		<a class="nav-link" href="/notifications/">Новости <span class="sr-only">(current)</span></a>
       		</li>
-					<li class="nav-item {% if '/timetable/' == request.path %} active {% endif %}">
-        		<a class="nav-link" href="/timetable/">Расписание <span class="sr-only">(current)</span></a>
+					<li class="nav-item {% if '/timetable_setup/' == request.path %} active {% endif %}">
+        		<a class="nav-link" href="/timetable_setup/">Мой класс <span class="sr-only">(current)</span></a>
       		</li>
 					<li class="nav-item {% if '/profile/' == request.path %} active {% endif %}">
         		<a class="nav-link" href="/profile/">Профиль <span class="sr-only">(current)</span></a>
       		</li>
 					{% endblock %}
 			</ul>
-			<strong class="nav-link active ml-5 text-right" style="color:black">{{username}}(Пользователь)</strong>
+			<strong class="nav-link active ml-5 text-right" style="color:black">{{username}}(Учитель)</strong>
 			<a class="btn ml-1" style="color:black; background-color:#E79700" href="/logout/">Выйти</a>
 		</nav>
 		</header>
@@ -46,10 +40,11 @@
 		<br />
 		<br />
 		{% block content %}{% endblock %}
+		<br>
 		<footer style="position:absolute;bottom: 0;width:100%;height:60px;line-height:60px;background-color:#145BA7;">
 			<div class="container">
 				<span class="float-right"><a class="btn btn-light" href="#">Наверх</a></span>
-				<span style="color:#FFFFFF;">&copy; 2019-2020 &middot; Электронный дневник</span><!-- <a href="#">Политика конфиденциальности</a> &middot; <a href="#">Условия использования</a>-->
+				<span style="color:#FFFFFF;">&copy; 2019-2020 &middot; Электронный журнал</span><!-- <a href="#">Политика конфиденциальности</a> &middot; <a href="#">Условия использования</a>-->
 			</div>
 		</footer>
 </body>
