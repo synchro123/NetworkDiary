@@ -4,11 +4,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 
-from .models import Article, School, Class
+from .models import *
 from django.contrib.auth.views import LoginView, LogoutView
 from .forms import AuthUserForm, ArticleForm
 
-from .user_fields import get_user_status, get_user_surname, get_user_name, get_user_fathername, set_user_school, get_user_school, get_user_class, get_user_subject
+from .user_fields import *
 
 from django.contrib.auth.models import User
 
@@ -17,6 +17,8 @@ def index(request):
     if request.user.is_authenticated == False:
         return HttpResponseRedirect(reverse('home:login_page'))
     else:
+        if get_user_status(request.user) == '0': return HttpResponseRedirect('/admin/')
+
         try:
             sc = School.objects.get(id=get_user_school(request.user))
         #a = Article.objects.get(school=sc).order_by('-date')
@@ -36,6 +38,7 @@ def profile(request):
     if request.user.is_authenticated == False:
         return HttpResponseRedirect(reverse('home:login_page'))
     else:
+        if get_user_status(request.user) == '0': return HttpResponseRedirect('/admin/')
         profile = request.user
         r_username = get_user_name(request.user)
         r_usersurname = get_user_surname(request.user)
@@ -57,6 +60,7 @@ def notifi(request):
     if request.user.is_authenticated == False:
         return HttpResponseRedirect(reverse('home:login_page'))
     else:
+        if get_user_status(request.user) == '0': return HttpResponseRedirect('/admin/')
         a = Article.objects.order_by('-date')[:5]
         # return render(request, 'home/notifi.html', {'notifications': a})
         username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
@@ -70,6 +74,7 @@ def timetable(request):
     if request.user.is_authenticated == False:
         return HttpResponseRedirect(reverse('home:login_page'))
     else:
+        if get_user_status(request.user) == '0': return HttpResponseRedirect('/admin/')
         username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
         return render(request, 'child/timetable.html', {'username': username})
 
@@ -78,6 +83,7 @@ def det(request, article):
     if request.user.is_authenticated == False:
         return HttpResponseRedirect(reverse('home:login_page'))
     else:
+        if get_user_status(request.user) == '0': return HttpResponseRedirect('/admin/')
         try:
             a = Article.objects.get(id=article)
         except:
@@ -101,6 +107,7 @@ def leave_comment(request, article):
     if request.user.is_authenticated == False:
         return HttpResponseRedirect(reverse('home:login_page'))
     else:
+        if get_user_status(request.user) == '0': return HttpResponseRedirect('/admin/')
         try:
             a = Article.objects.get(id=article)
         except:
@@ -135,6 +142,7 @@ def create_director_user(request):
 
 
 def edit_article_page(request):
+    if get_user_status(request.user) == '0': return HttpResponseRedirect('/admin/')
     if get_user_status(request.user) == 'director':
         success = False
         try:
@@ -151,7 +159,7 @@ def edit_article_page(request):
         username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
         template = 'director/edit_page.html'
         context = {
-            'list_articles': Article.objects.all(),
+            'list_articles': sc.article_set.all(),
             'username': username,
             'success': success
         }
@@ -227,6 +235,8 @@ def school_setup(request):
             if (get_user_status(u) == 'teacher' and get_user_school(u) == str(a.id)):
                 fio = get_user_name(u)[0] + '. ' + get_user_fathername(u)[0] + '. ' + get_user_surname(u)
                 users_teachers_info.append([u, fio])
+
+        subjects = a.schoolsubject_set.all()
         username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
         template = 'director/school_setup.html'
         context = {
@@ -234,6 +244,7 @@ def school_setup(request):
             'school': a,
             'classes': classes,
             'teachers': users_teachers_info,
+            'subjects': subjects
         }
         return render(request, template, context)
     else:
@@ -352,7 +363,7 @@ def add_classmate_to_class(request, id):
         newUser = User.objects.create_user(usrname, '', pwd)
         newUser.last_name = 'child___' + name + '___' + surname + '___' + fathername + '___schoolid=' + get_user_school(request.user) + '___classid=' + str(id)
         newUser.save()
-        return HttpResponseRedirect('/school_setup/redact_class/'+str(id))
+        return HttpResponseRedirect('/school_setup/edit_class/'+str(id))
     username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
     template = 'director/school_setup.html'
     context = {
@@ -366,7 +377,7 @@ def delete_child(request, id):
     a = User.objects.get(pk=id)
     clid = get_user_class(a)
     a.delete()
-    return  HttpResponseRedirect('/school_setup/redact_class/'+str(clid))
+    return  HttpResponseRedirect('/school_setup/edit_class/'+str(clid))
 
 def edit_child(request, id):
     a = User.objects.get(pk=id)
@@ -432,5 +443,153 @@ def edit_teacher(request, id):
         'mname': get_user_name(a),
         'sname': get_user_surname(a),
         'fname': get_user_fathername(a),
+    }
+    return render(request, template, context)
+
+def add_subject(request):
+
+    if request.method == 'POST':
+        sc = School.objects.get(director=request.user)
+        nm = request.POST['m_name']
+        new_subject = sc.schoolsubject_set.create(subj_name= nm)
+        return HttpResponseRedirect('/school_setup/')
+
+    template = "director/add_subject.html"
+    username = get_user_name(request.user) + ' ' + get_user_surname(request.user)
+    context = {
+        'username': username,
+    }
+    return render(request, template, context)
+
+def edit_timetable(request, id):
+    if get_user_status(request.user) != 'director':
+        return HttpResponseRedirect('/')
+    else:
+        try:
+            class_ = Class.objects.get(pk=id)
+        except:
+            return HttpResponseRedirect('/school_setup/')
+
+        try:
+            ttable = class_.timetable_set.get(schoolClass=class_)
+        except:
+            ttable = class_.timetable_set.create(schoolClass=class_)
+
+        #get days
+        try:
+            monday = ttable.dayofweek_set.get(dayname='Понедельник')
+        except:
+            ttable.dayofweek_set.create(dayname='Понедельник')
+
+        try:
+            tuesday = ttable.dayofweek_set.get(dayname='Вторник')
+        except:
+            ttable.dayofweek_set.create(dayname='Вторник')
+
+        try:
+            wednesday = ttable.dayofweek_set.get(dayname='Среда')
+        except:
+            ttable.dayofweek_set.create(dayname='Среда')
+
+        try:
+            thurthday = ttable.dayofweek_set.get(dayname='Четверг')
+        except:
+            ttable.dayofweek_set.create(dayname='Четверг')
+
+        try:
+            friday = ttable.dayofweek_set.get(dayname='Пятница')
+        except:
+            ttable.dayofweek_set.create(dayname='Пятница')
+
+        try:
+            saturday = ttable.dayofweek_set.get(dayname='Суббота')
+        except:
+            ttable.dayofweek_set.create(dayname='Суббота')
+        #end get days
+
+        #add subjects
+        c = 1
+        while c <= 8:
+            try:
+                m1 = monday.timetableschoolsubject_set.get(sublocalid=c)
+            except:
+                m1 = monday.timetableschoolsubject_set.create(sublocalid=c, subjSourceId=1, teacher=0,
+                                                              timeOfStart=timezone.now(), timeOfEnd=timezone.now())
+            c += 1
+        c = 1
+        while c <= 8:
+            try:
+                m1 = tuesday.timetableschoolsubject_set.get(sublocalid=c)
+            except:
+                m1 = tuesday.timetableschoolsubject_set.create(sublocalid=c, subjSourceId=1, teacher=0,
+                                                              timeOfStart=timezone.now(), timeOfEnd=timezone.now())
+            c += 1
+        c = 1
+        while c <= 8:
+            try:
+                m1 = wednesday.timetableschoolsubject_set.get(sublocalid=c)
+            except:
+                m1 = wednesday.timetableschoolsubject_set.create(sublocalid=c, subjSourceId=1, teacher=0,
+                                                              timeOfStart=timezone.now(), timeOfEnd=timezone.now())
+            c += 1
+        c = 1
+        while c <= 8:
+            try:
+                m1 = thurthday.timetableschoolsubject_set.get(sublocalid=c)
+            except:
+                m1 = thurthday.timetableschoolsubject_set.create(sublocalid=c, subjSourceId=1, teacher=0,
+                                                              timeOfStart=timezone.now(), timeOfEnd=timezone.now())
+            c += 1
+        c = 1
+        while c <= 8:
+            try:
+                m1 = friday.timetableschoolsubject_set.get(sublocalid=c)
+            except:
+                m1 = friday.timetableschoolsubject_set.create(sublocalid=c, subjSourceId=1, teacher=0,
+                                                              timeOfStart=timezone.now(), timeOfEnd=timezone.now())
+            c += 1
+        c = 1
+        while c <= 8:
+            try:
+                m1 = saturday.timetableschoolsubject_set.get(sublocalid=c)
+            except:
+                m1 = saturday.timetableschoolsubject_set.create(sublocalid=c, subjSourceId=1, teacher=0,
+                                                              timeOfStart=timezone.now(), timeOfEnd=timezone.now())
+            c += 1
+        #end add subjects
+
+        #get subjects
+        monday_ = monday.timetableschoolsubject_set.all()
+        tuesday_ = tuesday.timetableschoolsubject_set.all()
+        wednesday_ = wednesday.timetableschoolsubject_set.all()
+        thurthday_ = thurthday.timetableschoolsubject_set.all()
+        friday_ = friday.timetableschoolsubject_set.all()
+        saturday_ = saturday.timetableschoolsubject_set.all()
+        #end get subjects
+
+        template = 'director/timetable.html'
+        context = {
+            'days': [[monday, monday_], [tuesday, tuesday_], [wednesday, wednesday_], [thurthday, thurthday_], [friday, friday_], [saturday, saturday_]]
+        }
+        return render(request, template, context)
+
+def edit_subject_in_day(request, id):
+
+    if request.method == 'POST':
+        subject =
+
+    template = 'director/edit_subject_in_day.html'
+    users_list = User.objects.all()
+    teachers_list = []
+    for user in users_list:
+        try:
+            if get_user_school(user) == get_user_school(request.user) and get_user_status(user) == 'teacher':
+                teachers_list.append(user)
+        except:
+            pass
+
+    context = {
+        'subjects': School.objects.get(director=request.user).schoolsubject_set.all(),
+        'teachers': teachers_list
     }
     return render(request, template, context)

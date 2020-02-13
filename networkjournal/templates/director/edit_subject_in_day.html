@@ -1,0 +1,29 @@
+{% extends 'director_base.html' %}
+{% block title %}Настройки школы{% endblock %}
+{% block content %}
+<div class="text-center col-4" style="width: 100%;max-width: 330px;padding: 15px;margin: auto;">
+  <form id="form" method="post">
+    {% csrf_token %}
+    <label for="sel_subj"><b>Выберите предмет</b></label>
+    <select id="sel_subj" class="form-control" name="subject">
+      {% for s in subjects %}
+        <option value="{{s.id}}">{{s}}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="sel_teach"><b>Выберите учителя</b></label>
+    <select id="sel_teach" class="form-control" name="subject">
+      {% for t in teachers %}
+        <option value="{{t.id}}">{{t}}</option>
+      {% endfor %}
+    </select>
+    <br>
+    <label for="start_time"><b>Время начала урока</b></label>
+    <input class="form-control" id="start_time" type="time" name="start_time" value="">
+    <br>
+    <label for="start_time"><b>Время конца урока</b></label>
+    <input class="form-control" id="end_time" type="time" name="end_time" value="">
+  </form>
+  <button type="submit" form="form" class="btn btn-success" name="button">Применить</button>
+</div>
+{% endblock %}

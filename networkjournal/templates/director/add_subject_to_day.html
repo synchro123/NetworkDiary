@@ -1,0 +1,11 @@
+{% extends 'director_base.html' %}
+{% block title %}Настройки школы{% endblock %}
+{% block content %}
+<form id="form" method="post">
+  <select class="form-control" name="subject">
+    {% for s in subjects %}
+      <option value="{{s.id}}">{{s}}</option>
+    {% endfor %}
+  </select>
+</form>
+{% endblock %}

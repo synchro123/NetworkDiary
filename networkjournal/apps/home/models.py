@@ -72,3 +72,24 @@ class SchoolSubject(models.Model):
     class Meta:
         verbose_name = 'школьный предмет'
         verbose_name_plural = 'школьные предметы'
+
+class Timetable(models.Model):
+    schoolClass = models.ForeignKey(Class, on_delete=models.CASCADE)
+
+class DayOfWeek(models.Model):
+    timetable = models.ForeignKey(Timetable, on_delete=models.CASCADE)
+    dayname = models.CharField('Имя дня', max_length=50)
+
+    def __str__(self):
+        return self.dayname
+
+class TimetableSchoolSubject(models.Model):
+    dayofweek = models.ForeignKey(DayOfWeek, on_delete=models.CASCADE)
+    sublocalid = models.IntegerField('Порядковый номер урока')
+    subjSourceId = models.IntegerField('ID школьного предмета')
+    teacher = models.IntegerField('ID учителя')
+    timeOfStart = models.TimeField('Время начала')
+    timeOfEnd = models.TimeField('Время конца')
+
+    def get_subject_model(self):
+        return self.dayofweek.timetableschoolsubject_set.get(id=self.subjSourceId)

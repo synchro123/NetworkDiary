@@ -1,6 +1,9 @@
 def get_user_status(user):
     prefs = get_user_prefs(user)
-    return prefs[0]
+    try:
+        return prefs[0]
+    except:
+        return '0'
 
 
 def get_user_name(user):

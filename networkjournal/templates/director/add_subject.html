@@ -1,0 +1,13 @@
+{% extends 'director_base.html' %}
+{% block title %}Настройки школы{% endblock %}
+{% block content %}
+<div class="container text-center">
+  <h6>Добавление школьного предмета</h6>
+  <form id="form" method="post">
+    {% csrf_token %}
+    <input class="form-control" type="text" name="m_name" required placeholder="Наименование школьного предмета" value="">
+  </form>
+  <button form="form" class="btn btn-success" type="submit" name="button">Добавить</button>
+  <a href="#" class="btn btn-outline-success" >Отмена</a>
+</div>
+{% endblock %}

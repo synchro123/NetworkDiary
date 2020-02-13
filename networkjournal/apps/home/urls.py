@@ -46,4 +46,14 @@ urlpatterns = [
     path('school_setup/edit_teacher/<int:id>', views.edit_teacher, name='edit_teacher'),
     path('school_setup/delete_teacher/<int:id>', views.delete_teacher, name='delete_teacher'),
 
+    path('school_setup/edit_timetable/<int:id>', views.edit_timetable, name='redact_timetable'),
+
+    path('school_setup/add_subject/', views.add_subject, name='add_subject'),
+
+    path('school_setup/edit_subject/<int:id>', views.edit_teacher, name='edit_subject'),
+    path('school_setup/delete_subject/<int:id>', views.delete_teacher, name='delete_subject'),
+
+    #path('school_setup/add_subject_to_day/<int:id>', views.add_subject_to_day, name='add_subject_to_day'),
+
+    path('school_setup/edit_daysubject/<int:id>', views.edit_subject_in_day, name='edit_daysubject'),
 ]

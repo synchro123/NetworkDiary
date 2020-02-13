@@ -53,7 +53,9 @@
             </tbody>
           </table>
         {% endif %}
-        <a href="{% url 'home:add_classmate' classid %}" class="btn btn-primary">Добавить ученика в этот класс</a>
+        <a href="{% url 'home:add_classmate' classid %}" class="btn btn-outline-primary">Добавить ученика в этот класс</a>
+        <hr>
+        <a class="btn btn-primary" href="{% url 'home:redact_timetable' classid %}">Настройка расписания</a>
         <hr>
         <a href="/school_setup/" class="btn btn-outline-success">Назад</a>
       {% endif %}
@@ -112,6 +114,30 @@
           </table>
         {% endif %}
         <a class="btn btn-outline-primary" href="/school_setup/add_teacher/">Добавить учителя</a>
+        <br>
+        <hr>
+        <h3>Предметы</h3>
+        {% if subjects %}
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Название</th>
+                <th scope="col">Редактирование</th>
+                <th scope="col">Удаление</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for n in subjects %}
+                <tr>
+                  <th>{{n}}</th>
+                  <td><a href="{% url 'home:edit_subject' n.id %}">Редактировать</a></td>
+                  <td><a href="{% url 'home:delete_subject' n.id %}">Удалить</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+        <a class="btn btn-outline-primary" href="/school_setup/add_subject/">Добавить предмет</a>
       </div>
       {% else %}
         <h2>Сначала добавьте школу.</h2>
