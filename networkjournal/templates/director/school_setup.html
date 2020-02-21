@@ -7,6 +7,12 @@
       {% csrf_token %}
       <input name="cl_num" type="number" class="form-control" placeholder="Цифра класса" min="1" max="11" maxlength="1" required autofocus>
       <input name="cl_letter" class="form-control" placeholder="Буква класса" maxlength="1" required autofocus>
+      <label for="sel_teach">Выберите классного руководителя</label>
+          <select name="teach" id="sel_teach">
+            {% for t, nm in teachers_list %}
+            <option value="{{t.id}}">{{t}} ({{nm}})</option>
+            {% endfor %}
+          </select>
     </form>
     <a href="/school_setup/" class="btn btn-secondary">Отмена</a>
     <button form="add_cl_form" type="submit" class="btn btn-primary">Добавить класс</button>
@@ -28,6 +34,12 @@
           {% csrf_token %}
           <input name="cl_num" type="number" class="form-control" value="{{req_num}}" placeholder="Цифра класса" min="1" max="11" maxlength="1" required autofocus>
           <input name="cl_letter" class="form-control" placeholder="Буква класса" value="{{req_char}}" maxlength="1" required autofocus>
+          <label for="sel_teach">Выберите классного руководителя</label>
+          <select name="teach" id="sel_teach">
+            {% for t, nm, d in teachers_list %}
+            <option {% if d %}selected{% endif %} value="{{t.id}}">{{t}} ({{nm}})</option>
+            {% endfor %}
+          </select>
         </form>
         <button form="ed_cl_form" type="submit" class="btn btn-success">Применить изменения</button>
         <hr>

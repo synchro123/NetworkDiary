@@ -2,7 +2,7 @@
 {% block title %}Настройки школы{% endblock %}
 {% block content %}
 <div class="container text-center">
-  <h1>Расписание</h1>
+  <h1>Расписание</h1>  <span><a href="/school_setup/edit_class/{{id}}">вернуться назад</a></span>
   {% for d, v in days %}
     <h4>{{d}}</h4>
     <table class="table">
@@ -21,9 +21,9 @@
         <tr>
           <th scope="row">{{subj.sublocalid}}</th>
           <td scope="row">{{subj.get_subject_model}}</td>
-          <td scope="row">{{subj.get_subject_model}}</td>
-          <td scope="row">{{subj.get_subject_model}}</td>
-          <td scope="row">{{subj.get_subject_model}}</td>
+          <td scope="row">{{subj.get_teacher_model}} {{subj.get_teacher_name_and_surname_brackets}}</td>
+          <td scope="row">{{subj.timeOfStart}}</td>
+          <td scope="row">{{subj.timeOfEnd}}</td>
           <td scope="row"><a href="{% url 'home:edit_daysubject' subj.id %}" class="btn btn-sm btn-outline-primary">Редактирование</a></td>
         </tr>
         {% endfor %}

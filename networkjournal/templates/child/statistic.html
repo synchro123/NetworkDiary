@@ -1,0 +1,30 @@
+{% extends 'child_base.html' %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<div class="container">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col" width="200">Предмет</th>
+          <th scope="col" width="20">Ср. Балл</th>
+          <th scope="col">Отметки</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for subj, marks, mid in s_list %}
+        <tr>
+          <th scope="row">{{subj}}</th>
+          <td>{{mid}}</td>
+          <td>
+              {% for mark in marks %}
+                <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-placement="bottom" title="{{mark.date}}">
+                  {{mark}}
+                </button>
+              {% endfor %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}

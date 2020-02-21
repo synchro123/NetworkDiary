@@ -1,0 +1,34 @@
+{% extends 'teacher_base.html' %}
+{% block title %}Мой класс{% endblock %}
+{% block content %}
+    {% if class %}
+    <h6 class="text-center">Вы ведёте {{class}} класс</h6>
+    <hr>
+    <div class="container text-center">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">id</th>
+              <th scope="col">Логин</th>
+              <th scope="col">Имя</th>
+              <th scope="col">Фамилия</th>
+              <th scope="col">Отчество</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for child, nm, snm, fnm in classmates %}
+            <tr>
+              <th scope="row">{{child.id}}</th>
+              <td>{{child}}</td>
+              <td>{{nm}}</td>
+              <td>{{snm}}</td>
+              <td>{{fnm}}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    </div>
+    {% else %}
+    <h6 class="text-center">Вы не ведёте класс.</h6>
+    {% endif %}
+{% endblock %}

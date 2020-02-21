@@ -1,0 +1,15 @@
+{% extends 'teacher_base.html' %}
+{% block title %}Ред. дом. задания{% endblock %}
+{% block content %}
+<div class="container">
+    <form id="edf" method="post">
+        {% csrf_token %}
+        <label>Текст задания:</label>
+        <textarea class="form-control" required  placeholder="Текст задания" name="h_text">{{req_text}}</textarea>
+        <br>
+        <label>Крайний срок сдачи задания:</label>
+        <input class="form-control" required type="date" value="{{req_ddline}}" name="h_ddline">
+    </form>
+    <button type="submit" form="edf" class="btn btn-success">Применить</button>
+</div>
+{% endblock %}

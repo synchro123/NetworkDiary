@@ -5,11 +5,11 @@
 
 <div class="container">
 	<h2>{{article.title}}</h2>
-
+	<hr>
 	<p>{{article.text}}</p>
-
+	<hr>
 	<em>Опубликовано {{article.date}}</em>
-	<br>
+	<!--<br>
 	<br>
 	<hr>
 	<form action="{% url 'home:leave_comment' article.id %}" method="POST">
@@ -32,6 +32,6 @@
 
 	{% else %}
 	<h5>Никто ещё не прокомментировал эту новость.</h5>
-	{% endif %}
+	{% endif %}-->
 </div>
 {% endblock %}

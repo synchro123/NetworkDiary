@@ -1,0 +1,36 @@
+{% extends 'teacher_base.html' %}
+{% block title %}Мой класс{% endblock %}
+{% block content %}
+<div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{class}}
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      {% for cl in cl_list %}
+        <a class="dropdown-item" href="/teach/{{cl.id}}">{{cl}}</a>
+      {% endfor %}
+  </div>
+</div>
+<div class="container text-center">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Имя Фамилия</th>
+              <th scope="col">Фамилия</th>
+              <th scope="col">Отчество</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for child, fio in classmates %}
+            <tr>
+              <th scope="row">{{fio}}</th>
+              <td>{{child}}</td>
+              <td>{{nm}}</td>
+              <td>{{snm}}</td>
+              <td>{{fnm}}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    </div>
+{% endblock %}

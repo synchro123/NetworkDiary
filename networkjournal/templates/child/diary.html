@@ -2,7 +2,50 @@
 
 {% block title %}Дневник{% endblock %}
 {% block content %}
+<div class="container">
+	<h1>Сегодня {{date}} ({{weekday}})</h1>
+	<a href="#marktable">Перейти к последним полученным оценкам</a>
+	<a name="homeworktable"></a>
+    <table border="1" class="table text-center">
+      <thead>
+        <tr>
+          <th scope="col" width="150">Предмет</th>
+          <th scope="col">Домашнее задание</th>
+			<th scope="col" width="200">Крайний срок</th>
+        </tr>
+      </thead>
+      <tbody>
+		  {% for subj, dz in dzinfo %}
+			<tr>
+				<td>{{subj}}</td>
+				<td>{{dz}} <!--<a href="https://duckduckgo.com/?q={{dz}}" class="btn btn-info btn-sm" target="_blank">🔍</a>--> </td>
+				<td>{{dz.hw_deadline}}{% if date == dz.hw_deadline %}<span style="color: red"><b>(Сегодня!)</b></span>{% endif %}</td>
+			</tr>
+		  {% endfor %}
+      </tbody>
+    </table>
 
-	<h5>tyt budet dnevnik</h5>
-
+	<a name="marktable"></a>
+	<a href="#homeworktable">Перейти к домашним заданиям</a>
+	<table border="1" class="table text-center">
+      <thead>
+        <tr>
+          <th scope="col" width="150">Предмет</th>
+          <th scope="col" width="10">Полученная оценка</th>
+			<th scope="col" width="200">Дата получения</th>
+        </tr>
+      </thead>
+      <tbody>
+		  {% for subj, mark in markinfo %}
+			<tr>
+				<td>{{subj}}</td>
+				<td style="color:red"><b>{{mark.mark_value}}</b></td>
+				<td>{{mark.date}}</td>
+			</tr>
+		  {% endfor %}
+      </tbody>
+    </table>
+    <br>
+    <br>
+</div>
 {% endblock %}

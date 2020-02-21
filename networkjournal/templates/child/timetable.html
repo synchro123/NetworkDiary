@@ -1,0 +1,47 @@
+{% extends 'child_base.html' %}
+{% block title %}Расписание{% endblock %}
+{% block content %}
+<div class="container text-center">
+  <h1>Расписание для {{class}} класса</h1>
+    <p>Сегодня: {{today}} {{time}}</p>
+    <a href="#today">Перейти к сегодняшнему дню</a>
+    <details>
+        <summary>Навигатор</summary>
+        {% for d in timetable.dayofweek_set.all %}
+        <a href="#{{d.dayname}}">{{d.dayname}}</a>
+        <br>
+        {% endfor %}
+    </details>
+  {% for d in timetable.dayofweek_set.all %}
+    <a name="{{d.dayname}}"></a>
+    {% if today == d.dayname %}
+    <a name="today"></a>
+    {% endif %}
+    <table class="table">
+        <caption>{{d.dayname}}</caption>
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Предмет</th>
+          <th scope="col">Преподаватель</th>
+          <th scope="col">Время начала</th>
+          <th scope="col">Время конца</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for subj in d.timetableschoolsubject_set.all %}
+        <tr {% if today == d.dayname and time > subj.timeOfStart and time < subj.timeOfEnd %}class="table-active"{% endif %}>
+          <th scope="row">{{subj.sublocalid}}</th>
+          <td scope="row">{{subj.get_subject_model}}</td>
+          <td scope="row">{{subj.get_teacher_model}} {{subj.get_teacher_name_and_surname_brackets}}</td>
+          <td scope="row">{{subj.timeOfStart}}</td>
+          <td scope="row">{{subj.timeOfEnd}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br>
+    <br>
+  {% endfor %}
+</div>
+{% endblock %}

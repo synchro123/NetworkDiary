@@ -5,24 +5,26 @@
   <form id="form" method="post">
     {% csrf_token %}
     <label for="sel_subj"><b>Выберите предмет</b></label>
-    <select id="sel_subj" class="form-control" name="subject">
+    <select id="sel_subj"  required class="form-control" name="subject">
+      <option value="0">Пусто</option>
       {% for s in subjects %}
         <option value="{{s.id}}">{{s}}</option>
       {% endfor %}
     </select>
     <br>
     <label for="sel_teach"><b>Выберите учителя</b></label>
-    <select id="sel_teach" class="form-control" name="subject">
-      {% for t in teachers %}
-        <option value="{{t.id}}">{{t}}</option>
+    <select id="sel_teach" required class="form-control" name="teacher">
+      <option value="0">Пусто</option>
+      {% for t, tt in teachers %}
+        <option value="{{t.id}}">{{t}} ({{tt}})</option>
       {% endfor %}
     </select>
     <br>
     <label for="start_time"><b>Время начала урока</b></label>
-    <input class="form-control" id="start_time" type="time" name="start_time" value="">
+    <input class="form-control" required id="start_time" type="time" name="start_time" value="{{req_ts}}">
     <br>
     <label for="start_time"><b>Время конца урока</b></label>
-    <input class="form-control" id="end_time" type="time" name="end_time" value="">
+    <input class="form-control" required id="end_time" type="time" name="end_time" value="{{req_te}}">
   </form>
   <button type="submit" form="form" class="btn btn-success" name="button">Применить</button>
 </div>

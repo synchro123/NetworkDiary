@@ -7,9 +7,11 @@ app_name = 'home'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('diary/', views.diary, name='diary'),
-    path('timetable/', views.timetable, name='timetable'),
+    path('diary', views.diary, name='diary'),
+    path('timetable', views.timetable, name='timetable'),
     path('notifications/', views.notifi, name='notifications'),
+
+    path('marks/', views.staistic, name='statistic'),
 
     path('register/', views.director_register_menu, name='register_menu'),
     path('register/create/', views.create_director_user, name='create_director_user'),
@@ -50,10 +52,22 @@ urlpatterns = [
 
     path('school_setup/add_subject/', views.add_subject, name='add_subject'),
 
-    path('school_setup/edit_subject/<int:id>', views.edit_teacher, name='edit_subject'),
-    path('school_setup/delete_subject/<int:id>', views.delete_teacher, name='delete_subject'),
+    path('school_setup/edit_subject/<int:id>', views.edit_subject, name='edit_subject'),
+    path('school_setup/delete_subject/<int:id>', views.delete_subject, name='delete_subject'),
 
     #path('school_setup/add_subject_to_day/<int:id>', views.add_subject_to_day, name='add_subject_to_day'),
 
     path('school_setup/edit_daysubject/<int:id>', views.edit_subject_in_day, name='edit_daysubject'),
+
+    path('my_class', views.my_class, name='my_class'),
+
+    path('teach', views.teach, name="teach_"),
+    path('teach/<int:id>/<int:sub>', views.teach_det, name="teach"),
+
+    path('leave_mark/<int:year>/<int:month>/<int:day>/<int:id>/<int:subj>/<int:i>', views.leave_mark, name="leave_mark"),
+
+    path('edit_mark/<int:year>/<int:month>/<int:day>/<int:id>/<int:subj>/<int:i>', views.edit_mark, name="edit_mark"),
+
+    path('teach/edit_hw/<int:id>', views.edit_hw, name="edit_hw"),
+    path('teach/delete_hw/<int:id>', views.delete_hw, name="delete_hw")
 ]

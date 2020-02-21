@@ -1,0 +1,11 @@
+{% extends 'director_base.html' %}
+{% block title %}Настройки шк. предмета{% endblock %}
+{% block content %}
+<div class="text-center col-4" style="width: 100%;max-width: 330px;padding: 15px;margin: auto;">
+    <h6>В данном меню можно поменять только название предмета. Если же вы хотите изменить преподавателя, то перейдите в настройки расписания конкретного класса, и сделацте это там.</h6>
+    <form method="POST" id="edit_form">
+        <input class="form-control" value="{{req_name}}" required placeholder="Название предмета" type="text">
+    </form>
+    <button form="edit_form" type="submit" class="btn btn-success">Применить</button>
+</div>
+{% endblock %}
